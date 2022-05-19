@@ -18,16 +18,25 @@ export default class UserShop {
   @PrimaryGeneratedColumn({ name: 'id', type: 'bigint', unsigned: true })
   id: number;
 
-  @Column({ name: 'shop_name', type: 'varchar', length: 50, nullable: false, unique: true })
+  @Column({
+    name: 'shop_name',
+    type: 'varchar',
+    length: 50,
+    nullable: false,
+    unique: true,
+  })
   shopName: string;
 
   @Column({ name: 'address', type: 'varchar', length: 255 })
   address: string;
 
-  @Column({ name: 'phone_number', type: 'varchar', length: 10 })
-  phoneNumber: string;
-
-  @Column({ name: 'shop_type_id', type: 'int', unsigned: true, comment: '0: Normal 1: Mall', default: ShopType.Normal })
+  @Column({
+    name: 'shop_type_id',
+    type: 'int',
+    unsigned: true,
+    comment: '0: Normal 1: Mall',
+    default: ShopType.Normal,
+  })
   shopTypeId: number;
 
   @Column({ name: 'owner_id', type: 'bigint', unsigned: true })

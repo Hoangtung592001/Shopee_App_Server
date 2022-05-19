@@ -7,29 +7,16 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import Product from './Product';
-import User from './User';
-@Entity({ name: 'image' })
-export default class Judge {
+@Entity({ name: 'images' })
+export default class Image {
   @PrimaryGeneratedColumn({ name: 'id', type: 'bigint', unsigned: true })
   id: number;
-
-  @Column({
-    name: 'member_id',
-    type: 'bigint',
-    unsigned: true,
-    nullable: false,
-  })
-  memberId: number;
 
   @Column({ name: 'product_code', type: 'int', unsigned: true })
   productCode: number;
 
-  @Column({ name: 'content', type: 'varchar', length: 5000 })
-  content: string;
-
-  @Column({ name: 'stars', type: 'tinyint', unsigned: true })
-  stars: number;
+  @Column({ name: 'name', type: 'varchar', length: 1000, nullable: false })
+  name: string;
 
   @Column({
     name: 'status',
@@ -42,9 +29,6 @@ export default class Judge {
 
   @CreateDateColumn({ name: 'created_at', type: 'datetime' })
   createdAt: string | Date;
-
-  @CreateDateColumn({ name: 'updated_at', type: 'datetime' })
-  updatedAt: string | Date;
 
   /* -------------------------------------------------------------------------- */
   /*                                  Relation                                  */

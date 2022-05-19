@@ -21,8 +21,10 @@ import { AddProductsToCartDto } from './dto/AddProductToCart.dto';
 import {
   FindAllMemberModelDto,
   loadMoreFindAllMemberModelDto,
+  TypeProducts,
 } from './dto/GetAllProductsDto';
 import { assignLoadMore, assignPaging } from '$helpers/utils';
+import { SearchProductsDto } from './dto/SearchProduct.dto';
 
 interface IIdParam {
   id: string;
@@ -41,10 +43,7 @@ export class ProductController {
 
   @Public()
   @Get('get-all-products')
-  async getAllProducts(
-    @Req() req: Request,
-    @Query() query: loadMoreFindAllMemberModelDto,
-  ) {
+  async getAllProducts(@Req() req: Request, @Query() query: TypeProducts) {
     assignLoadMore(query);
     return this.productService.getAllProducts(query);
   }
@@ -110,5 +109,27 @@ export class ProductController {
   ) {
     assignLoadMore(query);
     return this.productService.getRecentVisitedProduct(member.id, query);
+  }
+
+  @Get('get-liked-products')
+  getLikedProducts(@UserData() member: Express.User) {
+    return this.productService.getLikedProducts(member.id);
+  }
+
+  @Get('get-info-order')
+  getInfoOrder(@UserData() member: Express.User) {
+    return this.productService.getInfoOrder(member.id);
+  }
+
+  @Public()
+  @Get('list-search-products')
+  listSearchProducts(@Query() query: SearchProductsDto) {
+    return this.productService.listSearchProducts(query.keywords);
+  }
+
+  @Public()
+  @Get('search-products')
+  searchProducts(@Query() query: SearchProductsDto) {
+    return this.productService.searchProducts(query.keywords);
   }
 }

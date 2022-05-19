@@ -1,5 +1,6 @@
 export interface RegisterShopDto {
-    shopName: string;
-    address: string;
-    phoneNumber: string;
+  shopName: string;
+  address: string;
+  logoImage: string;
+  coverImage: string;
 }

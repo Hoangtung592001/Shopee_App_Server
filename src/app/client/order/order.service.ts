@@ -127,7 +127,6 @@ export class OrderService {
               'One of the products you ordered have that owner is invalid or quantity you ordered is higher than shop have! Try again!',
             );
           } else {
-            console.log(1111);
             await productRepository
               .createQueryBuilder('p')
               .update()

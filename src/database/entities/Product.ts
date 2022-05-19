@@ -47,7 +47,12 @@ export default class Product {
   @Column({ name: 'image', type: 'varchar', length: 5000, nullable: false })
   image: string;
 
-  @Column({ name: 'description', type: 'varchar', length: 5000, nullable: false })
+  @Column({
+    name: 'description',
+    type: 'varchar',
+    length: 5000,
+    nullable: false,
+  })
   description: string;
 
   @Column({ name: 'origin', type: 'varchar', length: 255, nullable: false })
@@ -69,6 +74,7 @@ export default class Product {
     type: 'bigint',
     unsigned: true,
     nullable: false,
+    default: 0,
   })
   soldQuantity: number;
 
@@ -90,5 +96,5 @@ export default class Product {
 
   @ManyToOne(() => UserShop)
   @JoinColumn({ name: 'seller_id', referencedColumnName: 'id' })
-  seller: UserShop
+  seller: UserShop;
 }

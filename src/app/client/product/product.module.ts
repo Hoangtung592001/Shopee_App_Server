@@ -10,6 +10,7 @@ import UserShop from '$database/entities/UserShop';
 import ProductRecent from '$database/entities/ProductRecent';
 import Judge from '$database/entities/Judge';
 import Like from '$database/entities/Like';
+import Image from '$database/entities/Image';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import Like from '$database/entities/Like';
       ProductRecent,
       Judge,
       Like,
+      Image,
     ]),
     AuthModule,
   ],

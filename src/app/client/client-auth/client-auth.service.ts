@@ -142,12 +142,10 @@ export class ClientAuthService {
       params.refreshToken,
       this.userRepository,
     )) as any;
-    console.log(userInfo);
     if (!userInfo)
       throw new Exception(ErrorCode.Token_Not_Exist, 'Your Token is invalid!');
     const { iat, exp, ...payload } = userInfo;
     const accessToken = this.authService.generateAccessToken(payload as any);
-    console.log(accessToken);
     return accessToken;
   }
 }

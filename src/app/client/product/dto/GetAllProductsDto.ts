@@ -5,6 +5,10 @@ export class FindAllMemberModelDto {
 }
 
 export interface loadMoreFindAllMemberModelDto {
-    takeAfter: number;
-    pageSize: number;
+  takeAfter: number;
+  pageSize: number;
+}
+
+export interface TypeProducts {
+  type: number;
 }

@@ -11,7 +11,7 @@ import {
 import RoleUser from '$database/entities/UserRole';
 import Notification from './Notification';
 import UserShop from './UserShop';
-import { CommonStatus } from '$types/enums';
+import { CommonStatus, GenderStatus } from '$types/enums';
 import Judge from './Judge';
 @Entity({ name: 'user' })
 export default class User {
@@ -35,6 +35,12 @@ export default class User {
 
   @Column({ name: 'image', type: 'varchar', length: 10000, nullable: false })
   image: string;
+
+  @Column({ name: 'phone', type: 'varchar', length: 20, nullable: true })
+  phone: string;
+
+  @Column({ name: 'gender', type: 'tinyint', nullable: true })
+  gender: GenderStatus;
 
   @Column({
     name: 'status',

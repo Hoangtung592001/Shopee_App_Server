@@ -25,6 +25,7 @@ import Voucher from '$database/entities/Voucher';
 import UserShopType from '$database/entities/UserShopType';
 import UserShop from '$database/entities/UserShop';
 import ProductRecent from '$database/entities/ProductRecent';
+import Image from '$database/entities/Image';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -56,6 +57,7 @@ import ProductRecent from '$database/entities/ProductRecent';
         Judge,
         Like,
         Voucher,
+        Image,
       ],
     }),
     AdminModule,

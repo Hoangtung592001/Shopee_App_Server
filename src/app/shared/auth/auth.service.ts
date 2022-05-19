@@ -50,9 +50,7 @@ export class AuthService {
     }
 
     const isValid = await this.unPackageRefreshOrAccessToken(refreshToken);
-    console.log(isValid);
     if (!isValid) return false;
-
 
     const hasRefreshToken = await userRepository.findOne({
       where: { refreshToken: refreshToken },
@@ -63,9 +61,7 @@ export class AuthService {
     return isValid;
   }
 
-  async unPackageRefreshOrAccessToken(
-    token: string,
-  ) {
+  async unPackageRefreshOrAccessToken(token: string) {
     try {
       const payload = this.jwtService.verify(token, {
         secret: config.JWT_SECRET_KEY,

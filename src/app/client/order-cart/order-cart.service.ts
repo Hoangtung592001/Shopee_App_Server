@@ -21,6 +21,8 @@ export class OrderCartService {
     private readonly productRepository: Repository<Product>,
     @InjectRepository(OrderCart)
     private readonly orderCartRepository: Repository<OrderCart>,
+    @InjectRepository(UserShop)
+    private readonly userShopRepository: Repository<UserShop>,
   ) {}
 
   async addProductsToCart(memberId: number, product: AddProductsToCartDto) {
@@ -96,35 +98,35 @@ export class OrderCartService {
   }
 
   async getAllOrderInCart(memberId: number, params: GetOrderCartDto) {
-    const queryBuilder = this.orderCartRepository
-      .createQueryBuilder('oc')
-      .select('oc.quantity_order', 'quantity')
-      .addSelect('oc.id', 'orderCartId')
-      .addSelect('oc.product_code', 'productCode')
-      .addSelect('us.shop_name', 'shopName')
-      .addSelect('us.id', 'shopId')
-      .addSelect('u.image', 'shopImage')
-      .addSelect('p.image', 'productImage')
-      .addSelect('p.status', 'productStatus')
-      .addSelect('p.product_name', 'productName')
-      .addSelect('p.price_each', 'priceEach')
-      .addSelect('p.status', 'productStatus')
-      .innerJoin(Product, 'p', 'oc.product_code = p.id')
-      .innerJoin(UserShop, 'us', 'us.id = p.seller_id')
-      .innerJoin(User, 'u', 'u.id = us.owner_id')
-      .where('oc.status = :status', { status: CommonStatus.Active });
-    if (params.takeAfter) {
-      queryBuilder.andWhere('oc.id < :takeAfter', {
-        takeAfter: params.takeAfter,
-      });
-    }
-
-    const results = await queryBuilder
-      .orderBy('oc.id', 'DESC')
-      .take(params.pageSize)
-      .getRawMany();
-
-    return filterOrderCart(results);
+    const results = await this.productRepository
+      .createQueryBuilder('p')
+      .innerJoinAndMapOne('p.userShop', UserShop, 'us', 'us.id = p.sellerId')
+      .innerJoinAndMapOne('us.user', User, 'u', 'u.id = us.owner_id')
+      .innerJoinAndMapOne(
+        'p.orderCart',
+        OrderCart,
+        'oc',
+        'oc.productCode = p.id AND oc.customerId = :ocCustomerId AND oc.status = :ocStatus',
+        {
+          ocCustomerId: memberId,
+          ocStatus: CommonStatus.Active,
+        },
+      )
+      .select([
+        'us.id',
+        'us.shopName',
+        'u.id',
+        'u.image',
+        'u.username',
+        'p.id',
+        'p.productName',
+        'p.priceEach',
+        'p.discount',
+        'oc.orderId',
+        'oc.quantityOrder',
+      ])
+      .getMany();
+    return results;
   }
 
   async changeQuantityOrderOfProductInCart(

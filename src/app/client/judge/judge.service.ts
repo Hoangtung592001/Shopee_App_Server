@@ -7,8 +7,9 @@ import Judge from '$database/entities/Judge';
 import Product from '$database/entities/Product';
 import { PostJudgeDto } from './dto/post-judge.dto';
 import { Exception } from '$helpers/exception';
-import { ErrorCode, ProductStatus } from '$types/enums';
+import { CommonStatus, ErrorCode, ProductStatus } from '$types/enums';
 import { GetJudgeDto } from './dto/get-judge.dto';
+import User from '$database/entities/User';
 
 @Injectable()
 export class JudgeService {
@@ -65,14 +66,40 @@ export class JudgeService {
   }
 
   async getJudge(memberId: number, params: GetJudgeDto) {
-    const queryBuilder = this.judgeRepository.createQueryBuilder('j');
-    if (params.takeAfter) {
-      queryBuilder.andWhere('j.id < :takeAfter AND j.member_id = :memberId', {
-        takeAfter: params.takeAfter,
+    // stars, username, updatedAt, content, productId, productName, p.image
+    const queryBuilder = this.judgeRepository
+      .createQueryBuilder('j')
+      .innerJoinAndMapOne(
+        'j.product',
+        Product,
+        'p',
+        'p.id = j.productCode AND p.status = :pStatus',
+        { pStatus: ProductStatus.Active },
+      )
+      .innerJoinAndMapOne(
+        'j.member',
+        User,
+        'u',
+        'u.id = j.memberId AND u.status = :uStatus',
+        { uStatus: CommonStatus.Active },
+      )
+      .select([
+        'j.id',
+        'j.content',
+        'j.stars',
+        'j.createdAt',
+        'u.id',
+        'u.email',
+        'u.username',
+        'u.image',
+        'p.id',
+        'p.productName',
+        'p.image',
+      ])
+      .where('u.id = :memberId AND j.status = :jStatus', {
         memberId: memberId,
+        jStatus: CommonStatus.Active,
       });
-    }
-
     const results = await queryBuilder.orderBy('j.id', 'DESC').getMany();
 
     return results;
